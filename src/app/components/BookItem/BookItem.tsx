@@ -37,8 +37,8 @@ const BookItem = ({img,title,author,category,currentBook}: BookProps) => {
         </div>
         <div className='w-full h-full flex flex-col'>
             <p className='text-xs'>{oneCategory(category)}</p>
-            <h2 className='max-w-[200px]'>{title}</h2>
-            <p className='max-w-[200px] text-xs text-gray-800'>{author}</p>
+            <h2 className='max-w-[200px]'>{title ? title : ''}</h2>
+            <p className='max-w-[200px] text-xs text-gray-800'>{author ? author : ''}</p>
         </div>
     </div>  
     </Link> 

@@ -1,7 +1,7 @@
 "use client"
 import getBooks from "@/app/libs/getBooks";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addBooks, addIntoArray } from "@/store/slices/booksSlice";
+import { addBooks, addIntoArray, loading } from "@/store/slices/booksSlice";
 import React from "react";
 import { Header } from "../components/Header/Header";
 import { usePathname } from "next/navigation";
@@ -24,10 +24,12 @@ const Layout:React.FC<iFilter> = ({children}) => {
 
   const handleSubmit = async (e:React.MouseEvent<HTMLFormElement>) => { // нажатие ПОИСК
     e.preventDefault();
+    dispatch(loading(true));
     if(inputElement.current){
       const booklist = await getBooks({query:inputElement.current.value, value:categoryValue, valueTime:sortValue});
       dispatch(addBooks(booklist))   
     }
+    dispatch(loading(false));
   }
 
   const handleSelectCategories = (event: React.ChangeEvent<HTMLSelectElement>) => { // значение селекта категорий
@@ -54,7 +56,9 @@ const Layout:React.FC<iFilter> = ({children}) => {
       <Header handleSubmit={handleSubmit} handleSelectCategories={handleSelectCategories} handleSelectSort={handleSelectSort} inputElement={inputElement}/>
       {children}
       {books.items.length > 0 && router === '/' && books.items.length < books.totalItems && (
-        <button onClick={loadMoreBooks} className="flex items-center mx-auto border my-4 px-3 py-2 font-bold bg-gray-300">Load More</button>
+        <button onClick={loadMoreBooks} className="flex items-center mx-auto border my-4 px-3 py-2 font-bold bg-gray-300">
+          Load More
+        </button>
       )}
     </>
     );

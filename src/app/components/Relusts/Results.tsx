@@ -7,7 +7,8 @@ const Results = () => {
     console.log(books);
     
     const cut = (text:string) => { // если длина больше 15 символов, то обрезаем текст и заменяем на многоточие
-        return text?.length > 15 ? text.substring(0,15) + "...": text
+        if(!text) return ''
+        return text.length > 15 ? text.substring(0,15) + "...": text
     }
 
   return (
@@ -16,22 +17,23 @@ const Results = () => {
             <div className='flex justify-center'>
                 {books.totalItems > 0 && <p className='py-3'>{books.totalItems && `Found ${books.totalItems} results`}</p>}
             </div>
-            {books.items ? 
-                (<div className='flex flex-wrap gap-3 justify-center'>
-                    {books.items.map((book,index) => (
+            {books.isLoading ? (<div className="">Загрузка...</div>) 
+            : (books.items ? (
+                    <div className='flex flex-wrap gap-3 justify-center'>
+                    {books.items.map((book, index) => (
                         <BookItem
-                            currentBook={book}
-                            key={index} // плохая практика использовать индекс, но у гугл апи есть много дупликатов по апи при загрузке следующей партии книг в этой подборке
-                            img={book.volumeInfo.imageLinks?.thumbnail}
-                            title={cut(book.volumeInfo.title)}
-                            author={cut(book.volumeInfo.authors)}
-                            category={cut(book.volumeInfo.categories)}
+                        currentBook={book}
+                        key={index}
+                        img={book.volumeInfo.imageLinks?.thumbnail}
+                        title={cut(book.volumeInfo?.title)}
+                        author={cut(book.volumeInfo?.authors)}
+                        category={cut(book.volumeInfo?.categories)}
                         />
-                    ))
-                    }
-                </div>
-                )
-                : (<h3 className='books__error'>Ничего не найденно, либо введены некорректные данные...</h3>)
+                    ))}
+                    </div>
+                ) : (
+                    <h3 className='books__error'>Ничего не найдено, либо введены некорректные данные...</h3>
+            ))
             }
       </section>
     </main>

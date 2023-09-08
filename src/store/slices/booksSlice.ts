@@ -27,10 +27,13 @@ export const books = createSlice({
         state.bookDetails = action.payload;
     },
     addIntoArray: (state, action:PayloadAction<BookItemProps[]>) => {
-       state.items = [...state.items, ...action.payload]
-    }
+       state.items = [...state.items, ...action.payload];
+    },
+    loading: (state, action:PayloadAction<boolean>) => {
+        state.isLoading = action.payload;
+    },
   },
 });
 
-export const {addBooks, bookDetails, addIntoArray} = books.actions;
+export const {addBooks, bookDetails, addIntoArray, loading} = books.actions;
 export default books.reducer;

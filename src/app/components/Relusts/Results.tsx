@@ -15,9 +15,9 @@ const Results = () => {
     <main className="mx-auto my-0 max-w-7xl flex flex-col justify-center p-3">
         <section className="flex justify-center flex-col items-center">
             <div className='flex justify-center'>
-                {books.totalItems > 0 && <p className='py-3'>{books.totalItems && `Found ${books.totalItems} results`}</p>}
+                {books.isLoading ? '' : books.totalItems > 0 && <p className='py-3'>{books.totalItems && `Found ${books.totalItems} results`}</p>}
             </div>
-            {books.isLoading ? (<div className="">Загрузка...</div>) 
+            {books.isLoading ? (<div className="">Loading...</div>) 
             : (books.items ? (
                     <div className='flex flex-wrap gap-3 justify-center'>
                     {books.items.map((book, index) => (

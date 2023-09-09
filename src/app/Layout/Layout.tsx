@@ -6,12 +6,9 @@ import React from "react";
 import { Header } from "../components/Header/Header";
 import { usePathname } from "next/navigation";
 
+type iFilter = {children: React.ReactNode}
 
-type iFilter = {
-  children: React.ReactNode,
-}
-
-const Layout:React.FC<iFilter> = ({children}) => {
+const Layout:React.FC<iFilter> = ({children}) => { // COMPONENT
 
   const [categoryValue, setCategoryValue] = React.useState<string>('');      //--- хук селекта категории
   const [sortValue, setSortValue] = React.useState<string>('relevance');    //--- хук селекта время
@@ -55,7 +52,7 @@ const Layout:React.FC<iFilter> = ({children}) => {
     <>
       <Header handleSubmit={handleSubmit} handleSelectCategories={handleSelectCategories} handleSelectSort={handleSelectSort} inputElement={inputElement}/>
       {children}
-      {books.items.length > 0 && router === '/' && books.items.length < books.totalItems && (
+      {books.items.length > 0 && router === '/' && books.items.length < books.totalItems && !books.isLoading && (
         <button onClick={loadMoreBooks} className="flex items-center mx-auto border my-4 px-3 py-2 font-bold bg-gray-300">
           Load More
         </button>

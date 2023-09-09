@@ -27,7 +27,9 @@ export const books = createSlice({
         state.bookDetails = action.payload;
     },
     addIntoArray: (state, action:PayloadAction<BookItemProps[]>) => {
-       state.items = [...state.items, ...action.payload];
+        if(action.payload && action.payload.length > 0){
+            state.items = [...state.items, ...action.payload];
+        }
     },
     loading: (state, action:PayloadAction<boolean>) => {
         state.isLoading = action.payload;

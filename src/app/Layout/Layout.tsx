@@ -12,6 +12,7 @@ const Layout:React.FC<iFilter> = ({children}) => { // COMPONENT
 
   const [categoryValue, setCategoryValue] = React.useState<string>('');      //--- хук селекта категории
   const [sortValue, setSortValue] = React.useState<string>('relevance');    //--- хук селекта время
+  const [isLoadingMore, setIsLoadingMore] = React.useState<boolean>(false); // --- локальное состояние для кнопки Загрузить еще
 
   const inputElement = React.useRef<HTMLInputElement>(null!);             //----хук импута
 
@@ -43,9 +44,11 @@ const Layout:React.FC<iFilter> = ({children}) => { // COMPONENT
   let maxResults = 30;
 
   const loadMoreBooks = async () => {
+    setIsLoadingMore(true);
     const booklistNew = await getBooks({query:inputElement.current.value, value:categoryValue, valueTime:sortValue, startIndex:startIndex, maxResults:maxResults});
     dispatch(addIntoArray(booklistNew.items));
     setStartIndex(startIndex + 10);
+    setIsLoadingMore(false);
   }
 
   return (
@@ -54,7 +57,7 @@ const Layout:React.FC<iFilter> = ({children}) => { // COMPONENT
       {children}
       {books.items.length > 0 && router === '/' && books.items.length < books.totalItems && !books.isLoading && (
         <button onClick={loadMoreBooks} className="flex items-center mx-auto border my-4 px-3 py-2 font-bold bg-gray-300">
-          Load More
+          {isLoadingMore ? 'Loading...' : 'Load More'}
         </button>
       )}
     </>

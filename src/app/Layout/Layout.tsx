@@ -20,7 +20,7 @@ const Layout:React.FC<iFilter> = ({children}) => { // COMPONENT
   const books = useAppSelector(state => state.booksSlice);
   const router = usePathname();
 
-  const handleSubmit = async (e:React.MouseEvent<HTMLFormElement>) => { // нажатие ПОИСК
+  const handleSubmit = async (e:React.MouseEvent<HTMLFormElement>):Promise<void> => { // нажатие ПОИСК
     e.preventDefault();
     dispatch(loading(true));
     if(inputElement.current){
@@ -30,12 +30,12 @@ const Layout:React.FC<iFilter> = ({children}) => { // COMPONENT
     dispatch(loading(false));
   }
 
-  const handleSelectCategories = (event: React.ChangeEvent<HTMLSelectElement>) => { // значение селекта категорий
+  const handleSelectCategories = (event: React.ChangeEvent<HTMLSelectElement>):void => { // значение селекта категорий
     const value = event.target.value;
     setCategoryValue(value);
   }
 
-  const handleSelectSort = (event: React.ChangeEvent<HTMLSelectElement>) => { // значение селекта времени
+  const handleSelectSort = (event: React.ChangeEvent<HTMLSelectElement>):void => { // значение селекта времени
     const value = event.target.value;
     setSortValue(value);
   }
@@ -43,9 +43,13 @@ const Layout:React.FC<iFilter> = ({children}) => { // COMPONENT
   const [startIndex, setStartIndex] = React.useState(10);
   let maxResults = 30;
 
-  const loadMoreBooks = async () => {
+  const loadMoreBooks = async ():Promise<void> => {
     setIsLoadingMore(true);
     const booklistNew = await getBooks({query:inputElement.current.value, value:categoryValue, valueTime:sortValue, startIndex:startIndex, maxResults:maxResults});
+    if(books.totalItems > books.items.length){
+      console.log(books.totalItems - books.items.length);
+      
+    }
     dispatch(addIntoArray(booklistNew.items));
     setStartIndex(startIndex + 10);
     setIsLoadingMore(false);

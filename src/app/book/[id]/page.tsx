@@ -14,7 +14,7 @@ const Book = () => {
           <Image
             width={300}
             height={300}
-            className='w-auto'
+            className=' h-auto'
             src={currentBook.volumeInfo?.imageLinks?.thumbnail || ''}
             alt={`обложка книги:${currentBook.volumeInfo?.title}`}
             />

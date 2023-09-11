@@ -6,9 +6,9 @@ const Results = () => {
     const books = useAppSelector(state => state.booksSlice);
     console.log(books);
     
-    const cut = (text:string) => { // если длина больше 15 символов, то обрезаем текст и заменяем на многоточие
+    const cut = (text:string):string => { // если длина больше 15 символов, то обрезаем текст и заменяем на многоточие
         if(!text) return ''
-        return text.length > 15 ? text.substring(0,15) + "...": text
+        return text.length > 15 ? text.substring(0,15) + "..." : text
     }
 
   return (

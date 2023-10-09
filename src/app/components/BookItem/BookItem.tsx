@@ -16,9 +16,9 @@ const BookItem = ({img,title,author,category,currentBook}: BookProps) => {
 
  const oneCategory = (category:string):string => { 
   if(!category || category.length === 0) return '';
-  return category[0]?.toString().split(' ')[0];
+  return category[0];
  };
- 
+
   const dispatch = useAppDispatch();
 
   const seeBookDetails = () => {
@@ -33,7 +33,10 @@ const BookItem = ({img,title,author,category,currentBook}: BookProps) => {
       >
     <div className="flex flex-col justify-between h-ful3">
         <div className="flex justify-center items-center mb-4">
-         {img ? <Image className="w-auto" width={120} height={120} src={img} alt={`обложка книги: "${title}"`}/> : 'нет обложки'}
+         {img 
+          ? <Image className="w-auto" width={120} height={120} src={img} alt={`обложка книги: "${title}"`}/>
+          : 'нет обложки'
+          }
         </div>
         <div className='w-full h-full flex flex-col'>
             <p className='text-xs'>{oneCategory(category)}</p>

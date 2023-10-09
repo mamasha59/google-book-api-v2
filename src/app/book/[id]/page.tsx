@@ -9,8 +9,8 @@ const Book = () => {
   const router = useRouter();
 
   return (
-    <section className='mx-auto my-0 max-w-7xl flex  justify-center py-3'>
-      <div className='flex justify-center bg-slate-200 w-[40%] p-2'>
+    <section className='mx-auto my-0 max-w-7xl flex justify-center p-3 sm:flex-col'>
+      <div className='flex justify-center bg-slate-200 w-[40%] p-2 sm:w-full'>
           <Image
             width={300}
             height={300}
@@ -19,7 +19,7 @@ const Book = () => {
             alt={`обложка книги:${currentBook.volumeInfo?.title}`}
             />
       </div>
-       <div className='w-[60%] p-2'>
+       <div className='w-[60%] p-2 sm:w-full'>
           <p><span className="text-blue-500">Category</span> - {currentBook.volumeInfo?.categories || <span className='text-gray-500'>Информация о категории отсутствует...</span>}</p>
           <h2><span className="text-blue-500">Title</span> - {currentBook.volumeInfo?.title || <span className='text-gray-500'>Информация об названии отсутствует...</span>}</h2>
           <p><span className="text-blue-500">Author</span> - {currentBook.volumeInfo?.authors || <span className='text-gray-500'>Информация об авторе отсутствует...</span>}</p>

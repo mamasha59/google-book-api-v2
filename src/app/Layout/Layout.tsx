@@ -1,71 +1,84 @@
 "use client"
-import getBooks from "@/app/libs/getBooks";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addBooks, addIntoArray, loading } from "@/store/slices/booksSlice";
-import React from "react";
+import React, { FC, useState, useRef } from "react";
 import { Header } from "../components/Header/Header";
 import { usePathname } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { addBooks, addIntoArray, loading } from "@/store/slices/booksSlice";
+import getBooks from "@/app/libs/getBooks";
 
-type iFilter = {children: React.ReactNode}
+type FilterProps = { children: React.ReactNode };
 
-const Layout:React.FC<iFilter> = ({children}) => { // COMPONENT
+const Layout: FC<FilterProps> = ({ children }) => {
+  const [categoryValue, setCategoryValue] = useState("");
+  const [sortValue, setSortValue] = useState("relevance");
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const inputElement = useRef<HTMLInputElement>(null!);
 
-  const [categoryValue, setCategoryValue] = React.useState<string>('');      //--- хук селекта категории
-  const [sortValue, setSortValue] = React.useState<string>('relevance');    //--- хук селекта время
-  const [isLoadingMore, setIsLoadingMore] = React.useState<boolean>(false); // --- локальное состояние для кнопки Загрузить еще
-
-  const inputElement = React.useRef<HTMLInputElement>(null!);             //----хук импута
-
-  const dispatch = useAppDispatch(); 
-  const books = useAppSelector(state => state.booksSlice);
+  const dispatch = useAppDispatch();
+  const books = useAppSelector((state) => state.booksSlice);
   const router = usePathname();
 
-  const handleSubmit = async (e:React.MouseEvent<HTMLFormElement>):Promise<void> => { // нажатие ПОИСК
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     dispatch(loading(true));
-    if(inputElement.current){
-      const booklist = await getBooks({query:inputElement.current.value, value:categoryValue, valueTime:sortValue});
-      dispatch(addBooks(booklist))   
-    }
-    dispatch(loading(false));
-  }
 
-  const handleSelectCategories = (event: React.ChangeEvent<HTMLSelectElement>):void => { // значение селекта категорий
+    if (inputElement.current) {
+      getBooks({ query: inputElement.current.value, value: categoryValue, valueTime: sortValue })
+        .then((booklist) => {
+          dispatch(addBooks(booklist));
+        })
+        .catch((error)=> console.log("seomthing went wrong..." + error))
+        .finally(() => {
+          dispatch(loading(false));
+        });
+    }
+  };
+
+  const handleSelectCategories = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const value = event.target.value;
     setCategoryValue(value);
-  }
+  };
 
-  const handleSelectSort = (event: React.ChangeEvent<HTMLSelectElement>):void => { // значение селекта времени
+  const handleSelectSort = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const value = event.target.value;
     setSortValue(value);
-  }
+  };
 
-  const [startIndex, setStartIndex] = React.useState(10);
-  let maxResults = 30;
+  const [startIndex, setStartIndex] = useState(10);
+  const maxResults = 30;
 
-  const loadMoreBooks = async ():Promise<void> => {
+  const loadMoreBooks = (): void => {
     setIsLoadingMore(true);
-    const booklistNew = await getBooks({query:inputElement.current.value, value:categoryValue, valueTime:sortValue, startIndex:startIndex, maxResults:maxResults});
-    if(books.totalItems > books.items.length){
-      console.log(books.totalItems - books.items.length);
-      
-    }
-    dispatch(addIntoArray(booklistNew.items));
-    setStartIndex(startIndex + 10);
-    setIsLoadingMore(false);
-  }
+
+    getBooks({ query: inputElement.current?.value, value: categoryValue, valueTime: sortValue, startIndex, maxResults })
+      .then((booklistNew) => {
+        if (books.totalItems > books.items.length) {
+          console.log(books.totalItems - books.items.length);
+        }
+        dispatch(addIntoArray(booklistNew.items));
+        setStartIndex(startIndex + 10);
+      })
+      .finally(() => {
+        setIsLoadingMore(false);
+      });
+  };
 
   return (
     <>
-      <Header handleSubmit={handleSubmit} handleSelectCategories={handleSelectCategories} handleSelectSort={handleSelectSort} inputElement={inputElement}/>
+      <Header
+        handleSubmit={handleSubmit}
+        handleSelectCategories={handleSelectCategories}
+        handleSelectSort={handleSelectSort}
+        inputElement={inputElement}
+      />
       {children}
-      {books.items.length > 0 && router === '/' && books.items.length < books.totalItems && !books.isLoading && (
+      {books.items.length > 0 && router === "/" && books.items.length < books.totalItems && !books.isLoading && (
         <button onClick={loadMoreBooks} className="flex items-center mx-auto border my-4 px-3 py-2 font-bold bg-gray-300">
-          {isLoadingMore ? 'Loading...' : 'Load More'}
+          {isLoadingMore ? "Loading..." : "Load More"}
         </button>
       )}
     </>
-    );
+  );
 };
 
 export default Layout;

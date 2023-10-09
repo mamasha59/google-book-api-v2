@@ -12,6 +12,10 @@ const config: Config = {
        
       },
     },
+    screens: {
+      'sm': {'max': '767px'},
+      // => @media (max-width:) { ... }
+    }
   },
   plugins: [],
 }

@@ -30,7 +30,7 @@ export const Header:React.FC<HeaderProps> = ({handleSubmit,handleSelectCategorie
         </form>
         <div className="h-[1px] w-1/4 bg-black mx-auto my-3"></div>  {/*ДЕКОР ПОЛОСА*/}
 
-        <section className='flex gap-4 items-center justify-center'>
+        <section className='flex gap-4 flex-wrap items-center justify-center'>
             <div className='flex flex-col'>
                 <label className='text-center'>Categories</label>
                 <select name='select-what' className="min-w-[200px] p-1 flex" onChange={handleSelectCategories}>
